@@ -1,13 +1,20 @@
 import requests
 import time
+from pymdb import MDBInterface, MDBDevice
 
 SERVER_URL = "http://your-server-ip:5000"
+MDB_PORT = "/dev/ttyUSB0"  # Example port, update as needed
 
-def get_payment_url(item_price):
+# Initialize MDB interface
+mdb_interface = MDBInterface(MDB_PORT)
+mdb_device = MDBDevice(mdb_interface)
+
+def get_payment_url(item_price, item_slot):
     url = f"{SERVER_URL}/generate_payment"
     payload = {
         "item_price": item_price,
-        "recipient_wallet": "YOUR_SOLANA_WALLET_ADDRESS"
+        "recipient_wallet": "YOUR_SOLANA_WALLET_ADDRESS",
+        "item_slot": item_slot
     }
     try:
         response = requests.post(url, json=payload)
@@ -37,6 +44,16 @@ def verify_payment(memo):
         print(f"Error verifying payment: {e}")
         return False
 
+def dispense_item(slot):
+    # Command to dispense item from the specified slot using MDB protocol
+    try:
+        mdb_device.vend_request(slot)  # Function to request a vend from a specific slot
+        print(f"Dispensing item from slot {slot}...")
+        time.sleep(3)  # Simulate item dispensing delay
+        print("Item dispensed.")
+    except Exception as e:
+        print(f"Error dispensing item: {e}")
+
 def main():
     items = {
         "A1": 0.5,
@@ -48,7 +65,7 @@ def main():
     }
 
     while True:
-        print("Available items:")
+        print("\nAvailable items:")
         for slot, price in items.items():
             print(f"Slot: {slot}, Price: {price} SOL")
 
@@ -60,7 +77,7 @@ def main():
         item_price = items[selected_slot]
         print(f"Selected item price: {item_price} SOL")
 
-        memo = get_payment_url(item_price)
+        memo = get_payment_url(item_price, selected_slot)
         if not memo:
             continue
 
@@ -74,11 +91,9 @@ def main():
                 break
 
         if payment_verified:
-            print(f"Dispensing item from slot {selected_slot}...")
-            time.sleep(3)
-            print("Item dispensed.")
+            dispense_item(selected_slot)
         else:
-            print("Payment verification failed.")
+            print("Payment verification failed. Please try again.")
 
         time.sleep(5)
 
