@@ -9,37 +9,11 @@
     License
     Conclusion
 
-1. Introduction
 
-This section provides an overview of the project, its purpose, and its goals.
-2. Repository Overview
 
-Briefly describe the repository, including the primary languages used and key features.
-3. Setup and Installation
 
-Detail the steps to clone the repository, install dependencies, and configure the environment.
-4. Usage Guide
 
-Provide a step-by-step guide on how to use the project, including running scripts, interacting with the SolanaPay system, and integrating with vending machines.
-5. Technical Details
 
-Explain the code structure, key modules, and functions. Include examples and code snippets.
-6. Maintenance and Troubleshooting
-
-List common issues and solutions, as well as regular maintenance tasks.
-7. Advanced Configurations
-
-Discuss advanced setup options, customization, and optimization tips.
-8. Contributing
-
-Provide guidelines for contributing to the project, including how to report issues, submit code, and follow coding standards.
-9. License
-
-State the license under which the project is released and any relevant legal information.
-10. Conclusion
-
-Summarize the key points and encourage users to contribute and provide feedback.
-Example Documentation
 1. Introduction
 
 Mass Adoption Programs (MAPS) aim to onboard users to Solana as their preferred payment method, rewarding users and merchants who implement SolanaPay through a unique mass adoption reward system.
