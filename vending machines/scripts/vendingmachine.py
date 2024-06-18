@@ -4,6 +4,7 @@ from pymdb import MDBInterface, MDBDevice
 
 SERVER_URL = "http://your-server-ip:5000"
 MDB_PORT = "/dev/ttyUSB0"  # Example port, update as needed
+API_KEY = "your_secure_api_key"  # Set your API key here
 
 # Initialize MDB interface
 mdb_interface = MDBInterface(MDB_PORT)
@@ -11,13 +12,14 @@ mdb_device = MDBDevice(mdb_interface)
 
 def get_payment_url(item_price, item_slot):
     url = f"{SERVER_URL}/generate_payment"
+    headers = {"API-Key": API_KEY}
     payload = {
         "item_price": item_price,
         "recipient_wallet": "YOUR_SOLANA_WALLET_ADDRESS",
         "item_slot": item_slot
     }
     try:
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, headers=headers)
         response.raise_for_status()
         data = response.json()
         print(f"Payment URL: {data['payment_url']}")
@@ -29,9 +31,10 @@ def get_payment_url(item_price, item_slot):
 
 def verify_payment(memo):
     url = f"{SERVER_URL}/verify_payment"
+    headers = {"API-Key": API_KEY}
     payload = {"memo": memo}
     try:
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, headers=headers)
         response.raise_for_status()
         result = response.json()
         if result['status'] == "verified":
@@ -45,9 +48,9 @@ def verify_payment(memo):
         return False
 
 def dispense_item(slot):
-    # Command to dispense item from the specified slot using MDB protocol
     try:
-        mdb_device.vend_request(slot)  # Function to request a vend from a specific slot
+        # Select and vend the item from the specified slot
+        mdb_device.vend_request(slot)
         print(f"Dispensing item from slot {slot}...")
         time.sleep(3)  # Simulate item dispensing delay
         print("Item dispensed.")
